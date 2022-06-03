@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>API</title>
+	<style>
+		#form{
+			display: flex;
+			flex-direction: row;
+		}
+	</style>
+</head>
+<body>
+	<h1>Анэмэ</h1>
+	<form id="form">
+		<input type="text" id ="input">
+		<button id="seach" type="submit">Rip the Skin</button>
+	</form>
+	<img id="spiner" src="anime.gif.gif" style="display: none;" />
+
+	<ul id="list">
+	</ul>
+<img src="" id="Photo">
+
+	<div id="error"></div>
+
+	<script>
+		let data;  
+		let error;
+		document.addEventListener("DOMContentLoaded", () => {
+			const spiner = document.getElementById("spiner");
+			const seach = document.getElementById("seach");
+			const form = document.getElementById("form");
+		form.addEventListener("submit", async e => {
+			error = "";
+			spiner.style.display = "inline";
+			seach.disabled = true;
+			e.preventDefault();
+			// TODO: fetch data from API
+
+			const input = document.getElementById("input")
+
+			try{
+				const response = await fetch(`https://anime-facts-rest-api.herokuapp.com/api/v1/${input.value}`);
+			data = await response.json()
+
+			} catch(e) {
+				error = `Ошибка: ${e.message}`;
+			}
+
+
+			
+
+			spiner.style.display = "none";
+			seach.disabled = false;
+			 render();
+		})
+		});
+
+		function render() {
+			if(error){
+				const error = document.getElementById("error");
+				error.innerText = error;
+				return;
+			}
+			const list = document.getElementById("list");
+			let result = "";
+
+
+			for (let item of data.data){
+				result +=`<li>
+				<b>${item.fact_id}</b><br>
+				<b>${item.fact}</b><br>
+				</li>`;
+			}
+
+
+			list.innerHTML = result;
+
+			const Photo = document.getElementById("Photo");
+			Photo.src = data.img;
+
+		}
+	</script>
+</body>
+</html>
